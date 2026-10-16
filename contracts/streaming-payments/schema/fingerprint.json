@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "generated_at": "2025-10-16T00:00:00Z",
+  "wasm_spec_sha256": "REPLACE_ME",
+  "storage_keys": [
+    "DataKey::NextStreamId",
+    "DataKey::Stream(u64)",
+    "DataKey::RecipientStreams(Address)",
+    "DataKey::SenderStreams(Address)",
+    "DataKey::Governor",
+    "DataKey::PendingGovernor",
+    "DataKey::FeeBps",
+    "DataKey::Treasury(Address)",
+    "DataKey::StreamFee(u64)"
+  ],
+  "events": [
+    {"name": "StreamCreated", "topics": ["stream_id"], "fields": ["stream_id", "sender", "recipient", "token", "deposit", "start_time", "end_time", "cancelable"]},
+    {"name": "Withdrawn", "topics": ["stream_id"], "fields": ["stream_id", "recipient", "amount", "withdrawn_total"]},
+    {"name": "StreamCancelled", "topics": ["stream_id"], "fields": ["stream_id", "cancelled_by", "recipient_amount", "sender_amount"]},
+    {"name": "StreamToppedUp", "topics": ["stream_id"], "fields": ["stream_id", "sender", "amount", "new_deposit"]},
+    {"name": "FeeCharged", "topics": ["stream_id"], "fields": ["stream_id", "token", "payer", "amount", "fee_bps"]},
+    {"name": "FeeWithdrawn", "topics": ["token"], "fields": ["token", "governor", "recipient", "amount", "withdrawn_total"]}
+  ],
+  "error_codes": [
+    {"code": 1, "variant": "StreamNotFound"},
+    {"code": 2, "variant": "NotStreamSender"},
+    {"code": 3, "variant": "NotStreamRecipient"},
+    {"code": 4, "variant": "StreamNotCancellable"},
+    {"code": 5, "variant": "StreamNotActive"},
+    {"code": 6, "variant": "StartTimeInPast"},
+    {"code": 7, "variant": "InvalidTimeRange"},
+    {"code": 8, "variant": "DurationTooLong"},
+    {"code": 9, "variant": "ZeroAmount"},
+    {"code": 10, "variant": "AmountExceedsAvailable"},
+    {"code": 11, "variant": "MathOverflow"},
+    {"code": 12, "variant": "NotAuthorized"},
+    {"code": 13, "variant": "NothingToWithdraw"},
+    {"code": 14, "variant": "FeeRateTooHigh"},
+    {"code": 15, "variant": "NotGovernor"},
+    {"code": 16, "variant": "NoPendingGovernor"},
+    {"code": 17, "variant": "InsufficientTreasuryBalance"}
+  ]
+}
