@@ -8,9 +8,12 @@
 //! implementation without building Wasm.
 #![cfg(test)]
 
-use soroban_sdk::{contractclient, Address, Env, Vec};
+use soroban_sdk::{contractclient, Address, BytesN, Env, Vec};
 
-use crate::{FeeScan, ScheduledIntent, Stream, StreamError, StreamInput, TreasuryStatus};
+use crate::{
+    FeeScan, MigrationStatus, PendingUpgrade, ScheduledIntent, Stream, StreamError, StreamInput,
+    TreasuryStatus,
+};
 
 /// Interface of the StreamPay streaming-payments contract.
 #[contractclient(name = "StreamingPaymentsClient")]
@@ -83,4 +86,35 @@ pub trait StreamingPaymentsApi {
     fn stream_fee(env: Env, stream_id: u64) -> Result<i128, StreamError>;
     fn verify_treasury(env: Env, token: Address, start_id: u64, count: u32) -> FeeScan;
     fn total_streams(env: Env) -> u64;
+    fn policy_init(env: Env, admin: Address);
+    fn policy_propose_asset(env: Env, asset: Address, allowed: bool) -> Result<(), StreamError>;
+    fn policy_execute_asset(env: Env, asset: Address) -> Result<(), StreamError>;
+    fn policy_propose_handoff(env: Env, new_admin: Address) -> Result<(), StreamError>;
+    fn policy_accept_handoff(env: Env) -> Result<(), StreamError>;
+    fn policy_cancel_handoff(env: Env) -> Result<(), StreamError>;
+    fn policy_admin(env: Env) -> Option<Address>;
+    fn policy_pending_admin(env: Env) -> Option<Address>;
+    fn policy_timelock_delay(env: Env) -> u64;
+    fn policy_set_timelock_delay(env: Env, delay: u64) -> Result<(), StreamError>;
+    fn policy_is_asset_allowed(env: Env, asset: Address) -> bool;
+    fn policy_get_queued_asset(env: Env, asset: Address) -> Option<crate::QueuedAssetChange>;
+    fn schema_version(env: Env) -> u32;
+    fn is_frozen(env: Env) -> bool;
+    fn set_frozen(env: Env, caller: Address, frozen: bool) -> Result<(), StreamError>;
+    fn propose_upgrade(
+        env: Env,
+        caller: Address,
+        new_wasm_hash: BytesN<32>,
+        delay_seconds: u64,
+    ) -> Result<(), StreamError>;
+    fn cancel_upgrade(env: Env, caller: Address) -> Result<(), StreamError>;
+    fn execute_upgrade(env: Env, caller: Address) -> Result<(), StreamError>;
+    fn pending_upgrade(env: Env) -> Option<PendingUpgrade>;
+    fn migrate_storage(
+        env: Env,
+        caller: Address,
+        start_id: u64,
+        count: u32,
+    ) -> Result<MigrationStatus, StreamError>;
+    fn migration_progress(env: Env) -> MigrationStatus;
 }
