@@ -12,6 +12,9 @@ categories = ["cryptography::cryptocurrencies"]
 # Rust consumers) can link the pure rate math natively.
 crate-type = ["cdylib", "rlib"]
 
+[features]
+testutils = ["soroban-sdk/testutils"]
+
 [dependencies]
 soroban-sdk.workspace = true
 
