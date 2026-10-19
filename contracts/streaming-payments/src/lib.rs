@@ -59,6 +59,8 @@ mod policy;
 mod schedule;
 #[cfg(test)]
 mod schedule_test;
+#[cfg(test)]
+mod schema_fingerprint;
 mod stream;
 pub mod surface;
 #[cfg(test)]
